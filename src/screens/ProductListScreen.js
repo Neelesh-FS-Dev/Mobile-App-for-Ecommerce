@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  Image,
   RefreshControl,
 } from 'react-native';
 import { productsAPI } from '../services/api';
@@ -26,7 +25,6 @@ const ProductListScreen = ({ navigation }) => {
   const loadProducts = async () => {
     try {
       const response = await productsAPI.getAll(selectedCategory, searchQuery);
-      console.log('Products fetched:', response.data);
       setProducts(response.data);
       setFilteredProducts(response.data);
     } catch (error) {
@@ -46,9 +44,7 @@ const ProductListScreen = ({ navigation }) => {
     loadProducts();
   };
 
-  const handleSearch = text => {
-    setSearchQuery(text);
-  };
+  const handleSearch = text => setSearchQuery(text);
 
   const renderProduct = ({ item }) => (
     <ProductCard
@@ -84,6 +80,7 @@ const ProductListScreen = ({ navigation }) => {
           data={categories}
           keyExtractor={item => item}
           showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 10 }}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={[
@@ -111,6 +108,7 @@ const ProductListScreen = ({ navigation }) => {
         renderItem={renderProduct}
         keyExtractor={item => item.id.toString()}
         numColumns={2}
+        columnWrapperStyle={styles.columnWrapper}
         contentContainerStyle={styles.productsList}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -128,7 +126,7 @@ const ProductListScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f9f9f9',
   },
   center: {
     flex: 1,
@@ -136,43 +134,58 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchContainer: {
-    padding: 10,
-    backgroundColor: 'white',
+    padding: 12,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 2,
+    margin: 10,
+    borderRadius: 12,
   },
   searchInput: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: 'white',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    backgroundColor: '#f1f1f1',
+    fontSize: 16,
   },
   categoriesContainer: {
-    padding: 10,
-    backgroundColor: 'white',
+    paddingVertical: 10,
   },
   categoryButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-    marginRight: 8,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 25,
+    backgroundColor: '#e0e0e0',
+    marginRight: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 3,
+    elevation: 2,
   },
   categoryButtonSelected: {
     backgroundColor: '#007AFF',
   },
   categoryText: {
-    color: '#666',
-    fontWeight: '500',
+    color: '#555',
+    fontWeight: '600',
   },
   categoryTextSelected: {
-    color: 'white',
+    color: '#fff',
   },
   productsList: {
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingBottom: 20,
+  },
+  columnWrapper: {
+    justifyContent: 'space-between',
   },
   emptyText: {
     fontSize: 16,
-    color: '#666',
+    color: '#999',
     textAlign: 'center',
     marginTop: 50,
   },

@@ -32,13 +32,22 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
     try {
       const response = await authAPI.login(email, password);
+      console.log('Login response:', response);
 
-      await storage.setItem(STORAGE_KEYS.TOKEN, response.data.token);
-      await storage.setItem(STORAGE_KEYS.USER, response.data.user);
+      const token = response?.data?.token;
+      const user = response?.data?.user;
+
+      if (!token || !user) {
+        Alert.alert('Error', 'Invalid response from server');
+        return;
+      }
+
+      await storage.setItem(STORAGE_KEYS.TOKEN, token);
+      await storage.setItem(STORAGE_KEYS.USER, user);
 
       navigation.replace('Products');
     } catch (error) {
-      console.log(error);
+      console.log(error.response || error);
       Alert.alert('Error', error.response?.data?.error || 'Login failed');
     } finally {
       setLoading(false);

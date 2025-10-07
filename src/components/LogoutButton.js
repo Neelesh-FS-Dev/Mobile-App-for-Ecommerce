@@ -1,8 +1,11 @@
 import React from 'react';
 import { TouchableOpacity, Text, Alert } from 'react-native';
 import { storage, STORAGE_KEYS } from '../services/api';
+import { useCart } from '../context/CartContext';
 
 const LogoutButton = ({ navigation }) => {
+  const { clearCart } = useCart();
+
   const handleLogout = () => {
     Alert.alert('Logout', 'Are you sure you want to logout?', [
       { text: 'Cancel', style: 'cancel' },
@@ -12,6 +15,7 @@ const LogoutButton = ({ navigation }) => {
         onPress: async () => {
           await storage.removeItem(STORAGE_KEYS.TOKEN);
           await storage.removeItem(STORAGE_KEYS.USER);
+          clearCart(); // Clear cart on logout
           navigation.replace('Login');
         },
       },
